@@ -32,3 +32,7 @@ bash setup/darwin.sh
 - [zoxide](https://github.com/ajeetdsouza/zoxide) - smarter `cd`
 - [exa](https://github.com/ogham/exa) - modern `ls`
 - [mcfly](https://github.com/cantino/mcfly) - shell history
+
+## Not Yet Implemented
+
+- [bat](https://github.com/sharkdp/bat)
