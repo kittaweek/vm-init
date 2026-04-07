@@ -30,7 +30,6 @@ _install_linux() {
     ripgrep fd-find
     jq
     bat        # → batcat on Ubuntu; symlink handled below
-    atuin
   )
   sudo apt-get install -y --no-install-recommends "${APT_PKGS[@]}"
 
@@ -63,6 +62,12 @@ _install_linux() {
   if ! command -v zoxide &>/dev/null; then
     info "Installing zoxide..."
     curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sudo sh
+  fi
+
+  # ── atuin ───────────────────────────────────────────────────────────────────
+  if ! command -v atuin &>/dev/null; then
+    info "Installing atuin..."
+    curl -fsSL https://setup.atuin.sh | bash
   fi
 
   # ── eza ─────────────────────────────────────────────────────────────────────
