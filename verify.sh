@@ -55,7 +55,15 @@ printf "${BOLD}Platform:${NC} %s / %s\n" "$OS" "$ARCH"
 section "Common tools"
 check fish
 check starship
-check zoxide
+# zoxide installer defaults to $HOME/.local/bin; install.sh forces /usr/local/bin
+# Check both to handle pre-fix installs
+if command -v zoxide &>/dev/null || [[ -x "${HOME}/.local/bin/zoxide" ]]; then
+  printf "  ${GREEN}✓${NC} zoxide\n"
+  ((pass++))
+else
+  printf "  ${RED}✗${NC} zoxide\n"
+  ((fail++))
+fi
 # atuin installs to ~/.atuin/bin (no sudo) — not in system PATH by default
 if command -v atuin &>/dev/null || [[ -x "${HOME}/.atuin/bin/atuin" ]]; then
   printf "  ${GREEN}✓${NC} atuin\n"

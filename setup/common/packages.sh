@@ -83,7 +83,10 @@ _install_linux() {
   # ── zoxide ──────────────────────────────────────────────────────────────────
   if ! command -v zoxide &>/dev/null; then
     info "Installing zoxide..."
-    curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sudo sh ||
+    # Pass --bin-dir so the binary lands in system PATH regardless of $HOME
+    # (running as `sudo sh` sets HOME=/root, which would install to /root/.local/bin)
+    curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh |
+      sudo sh -s -- --bin-dir /usr/local/bin ||
       echo "  [!] zoxide install failed, continuing..."
   fi
 
