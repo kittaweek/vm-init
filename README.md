@@ -76,6 +76,24 @@ git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
 | `lazydocker`              | TUI for Docker                       |
 | `ctop`                    | Container metrics (Linux/macOS only) |
 
+## Verify installation
+
+After running `install.sh` / `install.ps1`, check that all tools were installed successfully:
+
+Linux / macOS:
+
+```bash
+bash verify.sh
+```
+
+Windows (PowerShell as Administrator):
+
+```powershell
+.\verify.ps1
+```
+
+Each tool is reported as installed (`✓`), missing (`✗`), or skipped (`–`) due to platform or architecture constraints. The script always runs to completion and shows a final pass/fail/skip count.
+
 ## Structure
 
 ```text
