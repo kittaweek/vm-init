@@ -4,6 +4,8 @@ One-command setup for a fresh Linux, macOS, or Windows machine.
 
 ## Usage
 
+> **Prerequisites:** Install [Git](https://git-scm.com/install/) before running the commands below.
+
 ### Linux / macOS
 
 ```bash
