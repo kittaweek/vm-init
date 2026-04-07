@@ -10,7 +10,7 @@ mkdir -p "$FISH_CONFIG_DIR"
 
 info "Writing fish config to $FISH_CONFIG ..."
 
-cat > "$FISH_CONFIG" <<'FISH'
+cat >"$FISH_CONFIG" <<'FISH'
 # ── Path ───────────────────────────────────────────────────────────────────────
 fish_add_path /usr/local/bin
 fish_add_path $HOME/.local/bin

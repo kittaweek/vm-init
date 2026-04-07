@@ -35,7 +35,7 @@ sudo systemctl enable --now fail2ban
 # Write a local jail config only if it doesn't exist yet
 JAIL_LOCAL="/etc/fail2ban/jail.local"
 if [[ ! -f "$JAIL_LOCAL" ]]; then
-  sudo tee "$JAIL_LOCAL" > /dev/null <<'JAIL'
+  sudo tee "$JAIL_LOCAL" >/dev/null <<'JAIL'
 [DEFAULT]
 bantime  = 1h
 findtime = 10m

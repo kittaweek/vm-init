@@ -1,7 +1,5 @@
 # VM Init
 
-Based on <https://github.com/kahnwong/nix>
-
 One-command setup for a fresh Linux, macOS, or Windows machine.
 
 ## Usage
@@ -9,14 +7,14 @@ One-command setup for a fresh Linux, macOS, or Windows machine.
 ### Linux / macOS
 
 ```bash
-git clone <repo-url> vm-init && cd vm-init
+git clone https://github.com/kittaweek/vm-init.git vm-init && cd vm-init
 bash install.sh
 ```
 
 ### Windows (PowerShell as Administrator)
 
 ```powershell
-git clone <repo-url> vm-init; cd vm-init
+git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
 .\install.ps1
 ```
 
@@ -31,51 +29,51 @@ git clone <repo-url> vm-init; cd vm-init
 
 ## Tools installed
 
-| Tool | Description |
-| ---- | ----------- |
-| `fish` | Default shell |
-| `starship` | Cross-shell prompt |
-| `zoxide` | Smarter `cd` |
-| `atuin` | Shell history sync |
-| `fzf` | Fuzzy finder |
-| `bat` | `cat` with syntax highlighting (aliased as `cat`) |
-| `eza` | Modern `ls` (aliased as `ls`, `ll`, `la`, `lt`) |
-| `ripgrep` | Fast grep (`rg`) |
-| `fd` | Fast `find` |
-| `delta` | Better git diffs |
-| `yazi` | Terminal file manager |
-| `rclone` | Cloud storage sync |
-| `glow` | Markdown renderer |
-| `fx` | JSON viewer |
-| `jq` | JSON processor |
-| `duf` | Disk usage (aliased as `df`) |
-| `btop` | System monitor (aliased as `top`) |
-| `htop` | Process viewer |
-| `ncdu` | Disk usage navigator |
-| `mtr` | Network diagnostics |
-| `tldr` | Simplified man pages |
-| `tmux` | Terminal multiplexer |
-| `neovim` | Text editor (aliased as `vim`) |
-| `tailscale` | VPN mesh network |
-| `rclone` | Cloud sync |
+| Tool        | Description                                       |
+| ----------- | ------------------------------------------------- |
+| `fish`      | Default shell                                     |
+| `starship`  | Cross-shell prompt                                |
+| `zoxide`    | Smarter `cd`                                      |
+| `atuin`     | Shell history sync                                |
+| `fzf`       | Fuzzy finder                                      |
+| `bat`       | `cat` with syntax highlighting (aliased as `cat`) |
+| `eza`       | Modern `ls` (aliased as `ls`, `ll`, `la`, `lt`)   |
+| `ripgrep`   | Fast grep (`rg`)                                  |
+| `fd`        | Fast `find`                                       |
+| `delta`     | Better git diffs                                  |
+| `yazi`      | Terminal file manager                             |
+| `rclone`    | Cloud storage sync                                |
+| `glow`      | Markdown renderer                                 |
+| `fx`        | JSON viewer                                       |
+| `jq`        | JSON processor                                    |
+| `duf`       | Disk usage (aliased as `df`)                      |
+| `btop`      | System monitor (aliased as `top`)                 |
+| `htop`      | Process viewer                                    |
+| `ncdu`      | Disk usage navigator                              |
+| `mtr`       | Network diagnostics                               |
+| `tldr`      | Simplified man pages                              |
+| `tmux`      | Terminal multiplexer                              |
+| `neovim`    | Text editor (aliased as `vim`)                    |
+| `tailscale` | VPN mesh network                                  |
+| `rclone`    | Cloud sync                                        |
 
 ## Linux only
 
-| Tool | Description |
-| ---- | ----------- |
-| `ufw` | Firewall (deny in, allow SSH) |
-| `fail2ban` | Brute-force protection |
-| `unattended-upgrades` | Auto security updates |
-| `strace` | System call tracer |
-| `openssh-client` | SSH client |
+| Tool                  | Description                   |
+| --------------------- | ----------------------------- |
+| `ufw`                 | Firewall (deny in, allow SSH) |
+| `fail2ban`            | Brute-force protection        |
+| `unattended-upgrades` | Auto security updates         |
+| `strace`              | System call tracer            |
+| `openssh-client`      | SSH client                    |
 
 ## Docker (non-ARM only)
 
-| Tool | Description |
-| ---- | ----------- |
-| `docker` + compose plugin | Container runtime |
-| `lazydocker` | TUI for Docker |
-| `ctop` | Container metrics (Linux/macOS only) |
+| Tool                      | Description                          |
+| ------------------------- | ------------------------------------ |
+| `docker` + compose plugin | Container runtime                    |
+| `lazydocker`              | TUI for Docker                       |
+| `ctop`                    | Container metrics (Linux/macOS only) |
 
 ## Structure
 

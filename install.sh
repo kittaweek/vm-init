@@ -5,9 +5,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ── Detect OS ──────────────────────────────────────────────────────────────────
 case "$(uname -s)" in
-  Linux*)   OS="linux" ;;
-  Darwin*)  OS="darwin" ;;
-  MINGW*|MSYS*|CYGWIN*) OS="windows" ;;
+  Linux*) OS="linux" ;;
+  Darwin*) OS="darwin" ;;
+  MINGW* | MSYS* | CYGWIN*) OS="windows" ;;
   *)
     echo "Unsupported OS: $(uname -s)"
     exit 1
@@ -17,8 +17,8 @@ esac
 # ── Detect Architecture ────────────────────────────────────────────────────────
 ARCH="$(uname -m)"
 case "$ARCH" in
-  arm64|aarch64) IS_ARM=true ;;
-  *)             IS_ARM=false ;;
+  arm64 | aarch64) IS_ARM=true ;;
+  *) IS_ARM=false ;;
 esac
 
 export OS ARCH IS_ARM SCRIPT_DIR

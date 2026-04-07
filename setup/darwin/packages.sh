@@ -43,11 +43,11 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 # Disable .DS_Store on network / USB volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores    -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 # Faster key repeat
-defaults write NSGlobalDomain KeyRepeat         -int 2
-defaults write NSGlobalDomain InitialKeyRepeat  -int 15
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 # Restart Finder to apply changes
 killall Finder 2>/dev/null || true

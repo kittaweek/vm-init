@@ -11,15 +11,15 @@ if ! command -v docker &>/dev/null; then
   sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg
 
   sudo install -m 0755 -d /etc/apt/keyrings
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
-    | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
   sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
   echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
     https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
-    | sudo tee /etc/apt/sources.list.d/docker.list
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
+    sudo tee /etc/apt/sources.list.d/docker.list
 
   sudo apt-get update -qq
   sudo apt-get install -y \
@@ -42,23 +42,23 @@ fi
 # ── lazydocker ────────────────────────────────────────────────────────────────
 if ! command -v lazydocker &>/dev/null; then
   info "Installing lazydocker..."
-  LAZY_VER=$(curl -fsSL https://api.github.com/repos/jesseduffield/lazydocker/releases/latest \
-    | grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
+  LAZY_VER=$(curl -fsSL https://api.github.com/repos/jesseduffield/lazydocker/releases/latest |
+    grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
   ARCH_L="$(uname -m)"
   case "$ARCH_L" in
     x86_64) ARCH_L="x86_64" ;;
-    *)      ARCH_L="x86_64" ;;  # fallback; non-ARM guard is in install.sh
+    *) ARCH_L="x86_64" ;; # fallback; non-ARM guard is in install.sh
   esac
   curl -fsSL \
-    "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZY_VER}/lazydocker_${LAZY_VER}_Linux_${ARCH_L}.tar.gz" \
-    | sudo tar -xz -C /usr/local/bin lazydocker
+    "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZY_VER}/lazydocker_${LAZY_VER}_Linux_${ARCH_L}.tar.gz" |
+    sudo tar -xz -C /usr/local/bin lazydocker
 fi
 
 # ── ctop ─────────────────────────────────────────────────────────────────────
 if ! command -v ctop &>/dev/null; then
   info "Installing ctop..."
-  CTOP_VER=$(curl -fsSL https://api.github.com/repos/bcicen/ctop/releases/latest \
-    | grep '"tag_name"' | cut -d'"' -f4)
+  CTOP_VER=$(curl -fsSL https://api.github.com/repos/bcicen/ctop/releases/latest |
+    grep '"tag_name"' | cut -d'"' -f4)
   sudo curl -fsSL \
     "https://github.com/bcicen/ctop/releases/download/${CTOP_VER}/ctop-${CTOP_VER}-linux-amd64" \
     -o /usr/local/bin/ctop

@@ -29,7 +29,7 @@ _install_linux() {
     fzf htop btop ncdu mtr
     ripgrep fd-find
     jq
-    bat        # → batcat on Ubuntu; symlink handled below
+    bat # → batcat on Ubuntu; symlink handled below
   )
   sudo apt-get install -y --no-install-recommends "${APT_PKGS[@]}"
 
@@ -75,10 +75,10 @@ _install_linux() {
     info "Installing eza..."
     sudo apt-get install -y gpg
     sudo mkdir -p /etc/apt/keyrings
-    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc \
-      | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" \
-      | sudo tee /etc/apt/sources.list.d/gierens.list
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc |
+      sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" |
+      sudo tee /etc/apt/sources.list.d/gierens.list
     sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
     sudo apt-get update -qq
     sudo apt-get install -y eza
@@ -87,8 +87,8 @@ _install_linux() {
   # ── delta ───────────────────────────────────────────────────────────────────
   if ! command -v delta &>/dev/null; then
     info "Installing delta..."
-    DELTA_VER=$(curl -fsSL https://api.github.com/repos/dandavison/delta/releases/latest \
-      | grep '"tag_name"' | cut -d'"' -f4)
+    DELTA_VER=$(curl -fsSL https://api.github.com/repos/dandavison/delta/releases/latest |
+      grep '"tag_name"' | cut -d'"' -f4)
     DELTA_DEB="git-delta_${DELTA_VER}_$(dpkg --print-architecture).deb"
     curl -fsSLO "https://github.com/dandavison/delta/releases/download/${DELTA_VER}/${DELTA_DEB}"
     sudo dpkg -i "$DELTA_DEB"
@@ -98,8 +98,8 @@ _install_linux() {
   # ── duf ─────────────────────────────────────────────────────────────────────
   if ! command -v duf &>/dev/null; then
     info "Installing duf..."
-    DUF_VER=$(curl -fsSL https://api.github.com/repos/muesli/duf/releases/latest \
-      | grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
+    DUF_VER=$(curl -fsSL https://api.github.com/repos/muesli/duf/releases/latest |
+      grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
     DUF_DEB="duf_${DUF_VER}_linux_$(dpkg --print-architecture).deb"
     curl -fsSLO "https://github.com/muesli/duf/releases/download/v${DUF_VER}/${DUF_DEB}"
     sudo dpkg -i "$DUF_DEB"
@@ -110,10 +110,10 @@ _install_linux() {
   if ! command -v glow &>/dev/null; then
     info "Installing glow..."
     sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL https://repo.charm.sh/apt/gpg.key \
-      | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" \
-      | sudo tee /etc/apt/sources.list.d/charm.list
+    curl -fsSL https://repo.charm.sh/apt/gpg.key |
+      sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" |
+      sudo tee /etc/apt/sources.list.d/charm.list
     sudo apt-get update -qq
     sudo apt-get install -y glow
   fi
@@ -121,11 +121,11 @@ _install_linux() {
   # ── fx ──────────────────────────────────────────────────────────────────────
   if ! command -v fx &>/dev/null; then
     info "Installing fx..."
-    FX_VER=$(curl -fsSL https://api.github.com/repos/antonmedv/fx/releases/latest \
-      | grep '"tag_name"' | cut -d'"' -f4)
+    FX_VER=$(curl -fsSL https://api.github.com/repos/antonmedv/fx/releases/latest |
+      grep '"tag_name"' | cut -d'"' -f4)
     ARCH_FX="$(uname -m)"
     case "$ARCH_FX" in
-      x86_64)  ARCH_FX="amd64" ;;
+      x86_64) ARCH_FX="amd64" ;;
       aarch64) ARCH_FX="arm64" ;;
     esac
     curl -fsSL "https://github.com/antonmedv/fx/releases/download/${FX_VER}/fx_linux_${ARCH_FX}" \
@@ -137,17 +137,17 @@ _install_linux() {
   # ── yazi ────────────────────────────────────────────────────────────────────
   if ! command -v yazi &>/dev/null; then
     info "Installing yazi..."
-    YAZI_VER=$(curl -fsSL https://api.github.com/repos/sxyazi/yazi/releases/latest \
-      | grep '"tag_name"' | cut -d'"' -f4)
+    YAZI_VER=$(curl -fsSL https://api.github.com/repos/sxyazi/yazi/releases/latest |
+      grep '"tag_name"' | cut -d'"' -f4)
     ARCH_Y="$(uname -m)"
     case "$ARCH_Y" in
-      x86_64)  ARCH_Y="x86_64" ;;
+      x86_64) ARCH_Y="x86_64" ;;
       aarch64) ARCH_Y="aarch64" ;;
     esac
     YAZI_TGZ="yazi-${ARCH_Y}-unknown-linux-musl.tar.gz"
-    curl -fsSL "https://github.com/sxyazi/yazi/releases/download/${YAZI_VER}/${YAZI_TGZ}" \
-      | sudo tar -xz -C /usr/local/bin --strip-components=1 \
-          "yazi-${ARCH_Y}-unknown-linux-musl/yazi"
+    curl -fsSL "https://github.com/sxyazi/yazi/releases/download/${YAZI_VER}/${YAZI_TGZ}" |
+      sudo tar -xz -C /usr/local/bin --strip-components=1 \
+        "yazi-${ARCH_Y}-unknown-linux-musl/yazi"
   fi
 
   # ── rclone ──────────────────────────────────────────────────────────────────
@@ -159,11 +159,11 @@ _install_linux() {
   # ── tldr (tealdeer) ─────────────────────────────────────────────────────────
   if ! command -v tldr &>/dev/null; then
     info "Installing tldr (tealdeer)..."
-    TLDR_VER=$(curl -fsSL https://api.github.com/repos/dbrgn/tealdeer/releases/latest \
-      | grep '"tag_name"' | cut -d'"' -f4)
+    TLDR_VER=$(curl -fsSL https://api.github.com/repos/dbrgn/tealdeer/releases/latest |
+      grep '"tag_name"' | cut -d'"' -f4)
     ARCH_T="$(uname -m)"
     case "$ARCH_T" in
-      x86_64)  ARCH_T="x86_64-unknown-linux-musl" ;;
+      x86_64) ARCH_T="x86_64-unknown-linux-musl" ;;
       aarch64) ARCH_T="aarch64-unknown-linux-musl" ;;
     esac
     curl -fsSL "https://github.com/dbrgn/tealdeer/releases/download/${TLDR_VER}/tealdeer-linux-${ARCH_T}" \
@@ -198,7 +198,7 @@ _install_darwin() {
 
 # ── Dispatch ───────────────────────────────────────────────────────────────────
 case "${OS:-$(uname -s | tr '[:upper:]' '[:lower:]')}" in
-  linux)  _install_linux ;;
+  linux) _install_linux ;;
   darwin) _install_darwin ;;
   *)
     echo "common/packages.sh: unsupported OS '$OS'"
