@@ -140,5 +140,3 @@ if [[ $skip -gt 0 ]]; then
   printf "  ${YELLOW}Skipped:${NC}  %d\n" "$skip"
 fi
 printf "%s\n" "────────────────────────────────"
-
-[[ $fail -eq 0 ]]

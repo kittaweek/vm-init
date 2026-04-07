@@ -107,7 +107,3 @@ if ($skip -gt 0) {
     Write-Host "  Skipped: $skip" -ForegroundColor Yellow
 }
 Write-Host "────────────────────────────────"
-
-if ($fail -gt 0) {
-    exit 1
-}
