@@ -10,6 +10,10 @@ $isArm = $arch -eq "ARM64"
 
 Write-Host "==> OS: windows | ARCH: $arch | ARM: $isArm"
 
+# ── Pre-install: system update ─────────────────────────────────────────────────
+Write-Host "==> Running pre-install setup..."
+& "$ScriptDir\setup\windows\pre-install.ps1"
+
 # ── Run Windows package setup ──────────────────────────────────────────────────
 Write-Host "==> Running Windows setup..."
 & "$ScriptDir\setup\windows\packages.ps1"
