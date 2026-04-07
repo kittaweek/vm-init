@@ -56,7 +56,14 @@ section "Common tools"
 check fish
 check starship
 check zoxide
-check atuin
+# atuin installs to ~/.atuin/bin (no sudo) — not in system PATH by default
+if command -v atuin &>/dev/null || [[ -x "${HOME}/.atuin/bin/atuin" ]]; then
+  printf "  ${GREEN}✓${NC} atuin\n"
+  ((pass++))
+else
+  printf "  ${RED}✗${NC} atuin\n"
+  ((fail++))
+fi
 check fzf
 check htop
 check btop
