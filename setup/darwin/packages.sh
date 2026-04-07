@@ -32,8 +32,6 @@ elif [[ -f /usr/local/bin/brew ]]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-brew update --quiet
-
 # ── Tailscale (via brew cask for macOS app) ────────────────────────────────────
 if ! brew list --cask tailscale &>/dev/null 2>&1; then
   info "Installing Tailscale..."

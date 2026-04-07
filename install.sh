@@ -25,6 +25,12 @@ export OS ARCH IS_ARM SCRIPT_DIR
 
 echo "==> OS: $OS | ARCH: $ARCH | ARM: $IS_ARM"
 
+# ── Pre-install: system update, sudo setup, swap (OS-specific) ────────────────
+if [[ -f "$SCRIPT_DIR/setup/$OS/pre-install.sh" ]]; then
+  echo "==> Running pre-install setup..."
+  bash "$SCRIPT_DIR/setup/$OS/pre-install.sh"
+fi
+
 # ── Run common setup ───────────────────────────────────────────────────────────
 echo "==> Running common setup..."
 bash "$SCRIPT_DIR/setup/common/packages.sh"

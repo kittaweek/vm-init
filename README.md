@@ -20,6 +20,16 @@ git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
 .\install.ps1
 ```
 
+## Pre-install steps (run automatically before packages)
+
+| Step | Linux | macOS | Windows |
+| ---- | ----- | ----- | ------- |
+| Add current user to sudo/admin | ✓ (with confirmation prompt) | — | — |
+| System update | `apt-get update && upgrade` | `brew update && upgrade` | `winget upgrade --all` |
+| Swap file | ✓ (prompts for size in GB, persists via `/etc/fstab`) | — | — |
+
+> All steps support both **ARM64** and **x86_64** architectures.
+
 ## Features
 
 - Detects OS (Linux / macOS / Windows) and CPU architecture (ARM64 or x86)
