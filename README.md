@@ -6,14 +6,14 @@ One-command setup for a fresh Linux, macOS, or Windows machine.
 
 > **Prerequisites:** Install [Git](https://git-scm.com/install/) before running the commands below.
 
-### Linux / macOS
+Linux / macOS:
 
 ```bash
 git clone https://github.com/kittaweek/vm-init.git vm-init && cd vm-init
 bash install.sh
 ```
 
-### Windows (PowerShell as Administrator)
+Windows (PowerShell as Administrator):
 
 ```powershell
 git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
@@ -22,12 +22,23 @@ git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
 
 ## Features
 
-- Detects OS (Linux / macOS / Windows) and CPU architecture (ARM64 or x86)
+- Detects OS (Linux / macOS / Windows) and CPU architecture (ARM64 or x86_64)
+- Runs pre-install steps: system update, sudo setup, and swap file (Linux)
 - Installs common CLI tools on all platforms
 - Applies OS-specific security hardening (Linux only)
 - Installs Docker + Compose plugin + lazydocker + ctop on **non-ARM** machines
 - Sets **fish** as the default shell
 - Writes a shared `~/.config/fish/config.fish` with aliases and tool integrations
+
+## Pre-install steps (run automatically)
+
+These run before any package installation. All steps support both **ARM64** and **x86_64**.
+
+| Step | Linux | macOS | Windows |
+| ---- | ----- | ----- | ------- |
+| Add current user to sudo | ✓ with confirmation prompt | — | — |
+| System update | `apt-get update && upgrade` | `brew update && upgrade` | `winget upgrade --all` |
+| Swap file | ✓ prompts for size in GB, persists via `/etc/fstab` | — | — |
 
 ## Tools installed
 
@@ -76,12 +87,32 @@ git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
 | `lazydocker`              | TUI for Docker                       |
 | `ctop`                    | Container metrics (Linux/macOS only) |
 
+## Verify installation
+
+After running `install.sh` / `install.ps1`, check that all tools were installed successfully:
+
+Linux / macOS:
+
+```bash
+bash verify.sh
+```
+
+Windows (PowerShell as Administrator):
+
+```powershell
+.\verify.ps1
+```
+
+Each tool is reported as installed (`✓`), missing (`✗`), or skipped (`–`) due to platform or architecture constraints. The script always runs to completion and shows a final pass/fail/skip count.
+
 ## Structure
 
 ```text
 .
 ├── install.sh          # Entrypoint for Linux/macOS
 ├── install.ps1         # Entrypoint for Windows
+├── verify.sh           # Verify installed tools (Linux/macOS)
+├── verify.ps1          # Verify installed tools (Windows)
 └── setup/
     ├── common/
     │   ├── packages.sh       # Common tools (all platforms)
@@ -89,12 +120,15 @@ git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
     │   ├── fish-config.sh    # fish config.fish + aliases
     │   └── starship.toml     # Starship prompt preset
     ├── linux/
+    │   ├── pre-install.sh    # Sudo setup, system update, swap file
     │   ├── packages.sh       # Linux-specific packages & hardening
     │   └── docker.sh         # Docker for Linux (non-ARM)
     ├── darwin/
+    │   ├── pre-install.sh    # System update (brew)
     │   ├── packages.sh       # Homebrew + macOS defaults
     │   └── docker.sh         # Docker Desktop for macOS (non-ARM)
     └── windows/
+        ├── pre-install.ps1   # System update (winget)
         ├── packages.ps1      # winget packages
         └── docker.ps1        # Docker Desktop for Windows (non-ARM)
 ```

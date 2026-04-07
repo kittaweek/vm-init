@@ -96,9 +96,9 @@ fi
 # ── ctop ─────────────────────────────────────────────────────────────────────
 if ! command -v ctop &>/dev/null; then
   info "Installing ctop..."
-  CTOP_VER="$(gh_latest bcicen/ctop)"
+  CTOP_VER="$(gh_latest bcicen/ctop | tr -d 'v')"
   sudo curl -fsSL \
-    "https://github.com/bcicen/ctop/releases/download/${CTOP_VER}/ctop-${CTOP_VER}-linux-${ARCH_BIN}" \
+    "https://github.com/bcicen/ctop/releases/download/v${CTOP_VER}/ctop-${CTOP_VER}-linux-${ARCH_BIN}" \
     -o /usr/local/bin/ctop
   sudo chmod +x /usr/local/bin/ctop
 fi
