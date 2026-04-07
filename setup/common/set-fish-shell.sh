@@ -20,7 +20,10 @@ if ! grep -qxF "$FISH_PATH" /etc/shells; then
 fi
 
 # ── Set fish as default shell ─────────────────────────────────────────────────
-CURRENT_SHELL="$(getent passwd "$USER" 2>/dev/null | cut -d: -f7 || dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}')"
+case "$(uname -s)" in
+  Darwin) CURRENT_SHELL="$(dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}')" ;;
+  *) CURRENT_SHELL="$(getent passwd "$USER" 2>/dev/null | cut -d: -f7 || true)" ;;
+esac
 
 if [[ "$CURRENT_SHELL" == "$FISH_PATH" ]]; then
   info "fish is already the default shell."

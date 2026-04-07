@@ -8,10 +8,13 @@ function Info($msg) { Write-Host "  [+] $msg" -ForegroundColor Cyan }
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     Info "Installing winget (App Installer)..."
     $uri = "https://aka.ms/getwinget"
-    $tmp = "$env:TEMP\AppInstaller.msixbundle"
-    Invoke-WebRequest -Uri $uri -OutFile $tmp -UseBasicParsing
-    Add-AppxPackage -Path $tmp
-    Remove-Item $tmp
+    $tmp = Join-Path $env:TEMP "AppInstaller.msixbundle"
+    try {
+        Invoke-WebRequest -Uri $uri -OutFile $tmp -UseBasicParsing
+        Add-AppxPackage -Path "$tmp"
+    } finally {
+        if (Test-Path $tmp) { Remove-Item $tmp }
+    }
 }
 
 # ── winget packages ────────────────────────────────────────────────────────────

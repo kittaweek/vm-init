@@ -3,6 +3,11 @@ set -euo pipefail
 
 info() { echo "  [+] $*"; }
 
+if ! command -v fish &>/dev/null; then
+  echo "  [!] fish not found — skipping fish config."
+  exit 0
+fi
+
 FISH_CONFIG_DIR="${HOME}/.config/fish"
 FISH_CONFIG="${FISH_CONFIG_DIR}/config.fish"
 

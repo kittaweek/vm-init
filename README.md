@@ -55,7 +55,6 @@ git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
 | `tmux`      | Terminal multiplexer                              |
 | `neovim`    | Text editor (aliased as `vim`)                    |
 | `tailscale` | VPN mesh network                                  |
-| `rclone`    | Cloud sync                                        |
 
 ## Linux only
 
@@ -85,7 +84,8 @@ git clone https://github.com/kittaweek/vm-init.git vm-init; cd vm-init
     ├── common/
     │   ├── packages.sh       # Common tools (all platforms)
     │   ├── set-fish-shell.sh # Set fish as default shell
-    │   └── fish-config.sh    # fish config.fish + aliases
+    │   ├── fish-config.sh    # fish config.fish + aliases
+    │   └── starship.toml     # Starship prompt preset
     ├── linux/
     │   ├── packages.sh       # Linux-specific packages & hardening
     │   └── docker.sh         # Docker for Linux (non-ARM)

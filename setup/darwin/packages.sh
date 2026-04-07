@@ -7,8 +7,16 @@ info() { echo "  [+] $*"; }
 if ! xcode-select -p &>/dev/null; then
   info "Installing Xcode Command Line Tools..."
   xcode-select --install
-  # Wait for installation to complete
-  until xcode-select -p &>/dev/null; do sleep 5; done
+  # Wait up to 10 minutes for installation to complete
+  _xcode_retries=0
+  until xcode-select -p &>/dev/null; do
+    sleep 5
+    _xcode_retries=$((_xcode_retries + 1))
+    if [[ $_xcode_retries -ge 120 ]]; then
+      echo "  [!] Xcode CLT installation timed out after 10 minutes." >&2
+      exit 1
+    fi
+  done
 fi
 
 # ── Homebrew ───────────────────────────────────────────────────────────────────

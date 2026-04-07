@@ -4,15 +4,36 @@ set -euo pipefail
 # ── Helpers ────────────────────────────────────────────────────────────────────
 info() { echo "  [+] $*"; }
 
+gh_latest() {
+  local repo="$1"
+  local strip_v="${2:-false}"
+  local auth_header=()
+  [[ -n "${GITHUB_TOKEN:-}" ]] && auth_header=(-H "Authorization: token $GITHUB_TOKEN")
+  local ver
+  ver=$(curl -fsSL "${auth_header[@]}" \
+    "https://api.github.com/repos/${repo}/releases/latest" |
+    grep '"tag_name"' | cut -d'"' -f4)
+  if [[ -z "$ver" ]]; then
+    echo "  [!] Failed to fetch version for ${repo} — check network or GITHUB_TOKEN" >&2
+    return 1
+  fi
+  [[ "$strip_v" == "true" ]] && ver="${ver#v}"
+  echo "$ver"
+}
+
 # ── macOS: ensure Homebrew is installed ────────────────────────────────────────
 _ensure_brew() {
   if ! command -v brew &>/dev/null; then
     info "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    # Add brew to PATH for Apple Silicon
-    if [[ -f /opt/homebrew/bin/brew ]]; then
-      eval "$(/opt/homebrew/bin/brew shellenv)"
-    fi
+  fi
+  # Add brew to PATH (Apple Silicon or Intel)
+  if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    export PATH="/opt/homebrew/bin:$PATH"
+  elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+    export PATH="/usr/local/bin:$PATH"
   fi
 }
 
@@ -87,23 +108,31 @@ _install_linux() {
   # ── delta ───────────────────────────────────────────────────────────────────
   if ! command -v delta &>/dev/null; then
     info "Installing delta..."
-    DELTA_VER=$(curl -fsSL https://api.github.com/repos/dandavison/delta/releases/latest |
-      grep '"tag_name"' | cut -d'"' -f4)
+    DELTA_VER="$(gh_latest dandavison/delta)"
     DELTA_DEB="git-delta_${DELTA_VER}_$(dpkg --print-architecture).deb"
     curl -fsSLO "https://github.com/dandavison/delta/releases/download/${DELTA_VER}/${DELTA_DEB}"
-    sudo dpkg -i "$DELTA_DEB"
-    rm -f "$DELTA_DEB"
+    if sudo dpkg -i "$DELTA_DEB"; then
+      rm -f "$DELTA_DEB"
+    else
+      rm -f "$DELTA_DEB"
+      echo "  [!] delta install failed" >&2
+      return 1
+    fi
   fi
 
   # ── duf ─────────────────────────────────────────────────────────────────────
   if ! command -v duf &>/dev/null; then
     info "Installing duf..."
-    DUF_VER=$(curl -fsSL https://api.github.com/repos/muesli/duf/releases/latest |
-      grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
+    DUF_VER="$(gh_latest muesli/duf true)"
     DUF_DEB="duf_${DUF_VER}_linux_$(dpkg --print-architecture).deb"
     curl -fsSLO "https://github.com/muesli/duf/releases/download/v${DUF_VER}/${DUF_DEB}"
-    sudo dpkg -i "$DUF_DEB"
-    rm -f "$DUF_DEB"
+    if sudo dpkg -i "$DUF_DEB"; then
+      rm -f "$DUF_DEB"
+    else
+      rm -f "$DUF_DEB"
+      echo "  [!] duf install failed" >&2
+      return 1
+    fi
   fi
 
   # ── glow ────────────────────────────────────────────────────────────────────
@@ -121,8 +150,7 @@ _install_linux() {
   # ── fx ──────────────────────────────────────────────────────────────────────
   if ! command -v fx &>/dev/null; then
     info "Installing fx..."
-    FX_VER=$(curl -fsSL https://api.github.com/repos/antonmedv/fx/releases/latest |
-      grep '"tag_name"' | cut -d'"' -f4)
+    FX_VER="$(gh_latest antonmedv/fx)"
     ARCH_FX="$(uname -m)"
     case "$ARCH_FX" in
       x86_64) ARCH_FX="amd64" ;;
@@ -137,8 +165,7 @@ _install_linux() {
   # ── yazi ────────────────────────────────────────────────────────────────────
   if ! command -v yazi &>/dev/null; then
     info "Installing yazi..."
-    YAZI_VER=$(curl -fsSL https://api.github.com/repos/sxyazi/yazi/releases/latest |
-      grep '"tag_name"' | cut -d'"' -f4)
+    YAZI_VER="$(gh_latest sxyazi/yazi)"
     ARCH_Y="$(uname -m)"
     case "$ARCH_Y" in
       x86_64) ARCH_Y="x86_64" ;;
@@ -159,8 +186,7 @@ _install_linux() {
   # ── tldr (tealdeer) ─────────────────────────────────────────────────────────
   if ! command -v tldr &>/dev/null; then
     info "Installing tldr (tealdeer)..."
-    TLDR_VER=$(curl -fsSL https://api.github.com/repos/dbrgn/tealdeer/releases/latest |
-      grep '"tag_name"' | cut -d'"' -f4)
+    TLDR_VER="$(gh_latest dbrgn/tealdeer)"
     ARCH_T="$(uname -m)"
     case "$ARCH_T" in
       x86_64) ARCH_T="x86_64-unknown-linux-musl" ;;
