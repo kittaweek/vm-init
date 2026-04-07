@@ -178,10 +178,13 @@ _install_linux() {
         x86_64) ARCH_Y="x86_64" ;;
         aarch64) ARCH_Y="aarch64" ;;
       esac
-      YAZI_TGZ="yazi-${ARCH_Y}-unknown-linux-musl.tar.gz"
-      curl -fsSL "https://github.com/sxyazi/yazi/releases/download/${YAZI_VER}/${YAZI_TGZ}" |
-        sudo tar -xz -C /usr/local/bin --strip-components=1 \
-          "yazi-${ARCH_Y}-unknown-linux-musl/yazi"
+      # Release format changed from .tar.gz to .zip
+      YAZI_ZIP="yazi-${ARCH_Y}-unknown-linux-musl.zip"
+      curl -fsSL "https://github.com/sxyazi/yazi/releases/download/${YAZI_VER}/${YAZI_ZIP}" \
+        -o /tmp/yazi.zip
+      sudo unzip -oq /tmp/yazi.zip "yazi-${ARCH_Y}-unknown-linux-musl/yazi" -d /tmp/yazi_extract
+      sudo install -m 755 "/tmp/yazi_extract/yazi-${ARCH_Y}-unknown-linux-musl/yazi" /usr/local/bin/yazi
+      rm -rf /tmp/yazi.zip /tmp/yazi_extract
     } || echo "  [!] yazi install failed, continuing..."
   fi
 
@@ -196,13 +199,14 @@ _install_linux() {
   if ! command -v tldr &>/dev/null; then
     info "Installing tldr (tealdeer)..."
     {
-      TLDR_VER="$(gh_latest dbrgn/tealdeer)"
+      # Repo moved to tealdeer-rs; filename arch suffix simplified
+      TLDR_VER="$(gh_latest tealdeer-rs/tealdeer)"
       ARCH_T="$(uname -m)"
       case "$ARCH_T" in
-        x86_64) ARCH_T="x86_64-unknown-linux-musl" ;;
-        aarch64) ARCH_T="aarch64-unknown-linux-musl" ;;
+        x86_64) ARCH_T="x86_64-musl" ;;
+        aarch64) ARCH_T="aarch64-musl" ;;
       esac
-      curl -fsSL "https://github.com/dbrgn/tealdeer/releases/download/${TLDR_VER}/tealdeer-linux-${ARCH_T}" \
+      curl -fsSL "https://github.com/tealdeer-rs/tealdeer/releases/download/${TLDR_VER}/tealdeer-linux-${ARCH_T}" \
         -o /tmp/tldr
       sudo install -m 755 /tmp/tldr /usr/local/bin/tldr
       rm -f /tmp/tldr
