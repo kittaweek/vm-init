@@ -72,4 +72,16 @@ alias df='duf'
 alias top='btop'
 FISH
 
+# ── Starship config ───────────────────────────────────────────────────────────
+STARSHIP_CONFIG_DIR="${HOME}/.config"
+STARSHIP_CONFIG="${STARSHIP_CONFIG_DIR}/starship.toml"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+mkdir -p "$STARSHIP_CONFIG_DIR"
+
+if [[ -f "${SCRIPT_DIR}/starship.toml" ]]; then
+  info "Writing starship config to $STARSHIP_CONFIG ..."
+  cp "${SCRIPT_DIR}/starship.toml" "$STARSHIP_CONFIG"
+fi
+
 info "fish config written."
