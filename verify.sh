@@ -2,6 +2,9 @@
 # verify.sh — Check that all expected tools from install.sh are present
 set -uo pipefail
 
+# Ensure system sbin paths are visible (some distros omit them from user PATH)
+export PATH="$PATH:/usr/local/sbin:/usr/sbin:/sbin"
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
