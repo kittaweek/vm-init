@@ -47,12 +47,35 @@ _install_linux() {
   APT_PKGS=(
     unzip zip tar curl wget rsync lsof tmux cron
     vim neovim
-    fzf htop btop ncdu mtr
+    fzf htop ncdu mtr
     ripgrep fd-find
     jq
     bat # → batcat on Ubuntu; symlink handled below
   )
   sudo apt-get install -y --no-install-recommends "${APT_PKGS[@]}"
+
+  # btop: not available in older Ubuntu/Debian repos — install from GitHub binary
+  if ! command -v btop &>/dev/null; then
+    if sudo apt-get install -y --no-install-recommends btop 2>/dev/null; then
+      info "btop installed via apt"
+    else
+      info "Installing btop from GitHub..."
+      {
+        BTOP_VER="$(gh_latest aristocratos/btop)"
+        ARCH_B="$(uname -m)"
+        case "$ARCH_B" in
+          x86_64) ARCH_B="x86_64" ;;
+          aarch64) ARCH_B="aarch64" ;;
+        esac
+        BTOP_TGZ="btop-${ARCH_B}-linux-musl.tbz"
+        curl -fsSL "https://github.com/aristocratos/btop/releases/download/${BTOP_VER}/${BTOP_TGZ}" \
+          -o /tmp/btop.tbz
+        sudo tar -xjf /tmp/btop.tbz -C /tmp/
+        sudo install -m 755 /tmp/btop/bin/btop /usr/local/bin/btop
+        rm -rf /tmp/btop.tbz /tmp/btop
+      } || echo "  [!] btop install failed, continuing..."
+    fi
+  fi
 
   # bat ships as 'batcat' on Debian/Ubuntu — create symlink if missing
   if command -v batcat &>/dev/null && ! command -v bat &>/dev/null; then
@@ -64,13 +87,28 @@ _install_linux() {
     sudo ln -sf "$(command -v fdfind)" /usr/local/bin/fd
   fi
 
-  # ── fish (official PPA) ──────────────────────────────────────────────────────
+  # ── fish ─────────────────────────────────────────────────────────────────────
   if ! command -v fish &>/dev/null; then
-    info "Installing fish via PPA..."
-    sudo apt-get install -y software-properties-common
-    sudo apt-add-repository -y ppa:fish-shell/release-3
-    sudo apt-get update -qq
-    sudo apt-get install -y fish
+    info "Installing fish..."
+    _DISTRO_ID="$(. /etc/os-release 2>/dev/null && echo "${ID:-unknown}")"
+    _DISTRO_LIKE="$(. /etc/os-release 2>/dev/null && echo "${ID_LIKE:-}")"
+    if [[ "$_DISTRO_ID" == "ubuntu" ]] || echo "$_DISTRO_LIKE" | grep -q "ubuntu"; then
+      # Ubuntu (and Ubuntu-based distros like Mint): use official Launchpad PPA
+      sudo apt-get install -y software-properties-common
+      sudo apt-add-repository -y ppa:fish-shell/release-4
+      sudo apt-get update -qq
+      sudo apt-get install -y fish
+    else
+      # Debian and other Debian-based distros: use OBS build service
+      _VER_ID="$(. /etc/os-release 2>/dev/null && echo "${VERSION_ID:-12}")"
+      sudo mkdir -p /etc/apt/keyrings
+      curl -fsSL "https://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_${_VER_ID}/Release.key" |
+        sudo gpg --dearmor -o /etc/apt/keyrings/fish.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/fish.gpg] https://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_${_VER_ID}/ /" |
+        sudo tee /etc/apt/sources.list.d/fish.list
+      sudo apt-get update -qq
+      sudo apt-get install -y fish
+    fi
   fi
 
   # ── starship ────────────────────────────────────────────────────────────────
