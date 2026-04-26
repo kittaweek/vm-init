@@ -70,7 +70,7 @@ _install_linux() {
         BTOP_TGZ="btop-${ARCH_B}-linux-musl.tbz"
         curl -fsSL "https://github.com/aristocratos/btop/releases/download/${BTOP_VER}/${BTOP_TGZ}" \
           -o /tmp/btop.tbz
-        sudo tar -xjf /tmp/btop.tbz -C /tmp/
+        sudo tar -xf /tmp/btop.tbz -C /tmp/
         sudo install -m 755 /tmp/btop/bin/btop /usr/local/bin/btop
         rm -rf /tmp/btop.tbz /tmp/btop
       } || echo "  [!] btop install failed, continuing..."
@@ -152,29 +152,40 @@ _install_linux() {
   # ── delta ───────────────────────────────────────────────────────────────────
   if ! command -v delta &>/dev/null; then
     info "Installing delta..."
-    DELTA_VER="$(gh_latest dandavison/delta)"
-    DELTA_DEB="git-delta_${DELTA_VER}_$(dpkg --print-architecture).deb"
-    curl -fsSLO "https://github.com/dandavison/delta/releases/download/${DELTA_VER}/${DELTA_DEB}"
-    if sudo dpkg -i "$DELTA_DEB"; then
-      rm -f "$DELTA_DEB"
-    else
-      rm -f "$DELTA_DEB"
-      echo "  [!] delta install failed, continuing..." >&2
-    fi
+    {
+      DELTA_VER="$(gh_latest dandavison/delta)"
+      ARCH_D="$(uname -m)"
+      case "$ARCH_D" in
+        x86_64) ARCH_D="x86_64" ;;
+        aarch64) ARCH_D="aarch64" ;;
+      esac
+      DELTA_TGZ="delta-${DELTA_VER}-${ARCH_D}-unknown-linux-musl.tar.gz"
+      curl -fsSL "https://github.com/dandavison/delta/releases/download/${DELTA_VER}/${DELTA_TGZ}" \
+        -o /tmp/delta.tar.gz
+      tar -xzf /tmp/delta.tar.gz -C /tmp/
+      sudo install -m 755 "/tmp/delta-${DELTA_VER}-${ARCH_D}-unknown-linux-musl/delta" /usr/local/bin/delta
+      rm -rf /tmp/delta.tar.gz "/tmp/delta-${DELTA_VER}-${ARCH_D}-unknown-linux-musl"
+    } || echo "  [!] delta install failed, continuing..."
   fi
 
   # ── duf ─────────────────────────────────────────────────────────────────────
   if ! command -v duf &>/dev/null; then
     info "Installing duf..."
-    DUF_VER="$(gh_latest muesli/duf true)"
-    DUF_DEB="duf_${DUF_VER}_linux_$(dpkg --print-architecture).deb"
-    curl -fsSLO "https://github.com/muesli/duf/releases/download/v${DUF_VER}/${DUF_DEB}"
-    if sudo dpkg -i "$DUF_DEB"; then
-      rm -f "$DUF_DEB"
-    else
-      rm -f "$DUF_DEB"
-      echo "  [!] duf install failed, continuing..." >&2
-    fi
+    {
+      DUF_VER="$(gh_latest muesli/duf true)"
+      ARCH_DUF="$(uname -m)"
+      case "$ARCH_DUF" in
+        x86_64) ARCH_DUF="amd64" ;;
+        aarch64) ARCH_DUF="arm64" ;;
+      esac
+      DUF_TGZ="duf_${DUF_VER}_linux_${ARCH_DUF}.tar.gz"
+      curl -fsSL "https://github.com/muesli/duf/releases/download/v${DUF_VER}/${DUF_TGZ}" \
+        -o /tmp/duf.tar.gz
+      mkdir -p /tmp/duf_extract
+      tar -xzf /tmp/duf.tar.gz -C /tmp/duf_extract/
+      sudo install -m 755 /tmp/duf_extract/duf /usr/local/bin/duf
+      rm -rf /tmp/duf.tar.gz /tmp/duf_extract
+    } || echo "  [!] duf install failed, continuing..."
   fi
 
   # ── glow ────────────────────────────────────────────────────────────────────
